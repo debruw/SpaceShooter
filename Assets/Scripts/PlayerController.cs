@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     public Transform shotSpawn;
     public float fireRate;
     float nextFire;
+    private AudioSource playerShoot;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        playerShoot = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour
         {
             nextFire = Time.time + fireRate;
             Instantiate(bolt, shotSpawn.position, shotSpawn.rotation);
+            playerShoot.Play();
         }
     }
 

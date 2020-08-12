@@ -5,6 +5,21 @@ using UnityEngine;
 public class DestroyByContact : MonoBehaviour
 {
     public GameObject explosionEffect, playerExplosionEffect;
+    public int scoreValue;
+    GameController gameController;
+
+    private void Start()
+    {
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
+        else
+        {
+            Debug.Log("'GameController' bulunamadı.");
+        }        
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,14 +27,17 @@ public class DestroyByContact : MonoBehaviour
         {
             return;
         }
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
+        gameController.AddScore(scoreValue);
+
+        //Singleton.Instance.AddScore(scoreValue);
+        //GameController.AddScoreStatic(scoreValue);
+
         if (other.CompareTag("Player"))
-        {
-            Instantiate(playerExplosionEffect, transform.position, Quaternion.identity);
+        {            
+            Instantiate(playerExplosionEffect, other.transform.position, Quaternion.identity);
+            gameController.GameOver();
         }
-        else
-        {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        }        
         Destroy(other.gameObject);
         Destroy(gameObject);
     }
